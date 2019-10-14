@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <mujoco>
-	<option gravity="0 0 -9.81" integrator="RK4" timestep="0.02"/>
+    <option gravity="0 0 -9.81" integrator="RK4" timestep="0.02">  
+        <flag frictionloss="disable"/>
+    </option>
     <worldbody>
-        <!-- <body name="robot" pos="0 0 &#45;5.0" mocap="true"> -->
-        <body name="robot" pos="7.5 0 0">
+        <body name="robot" pos="10 0 0">
             <joint axis="1 0 0" damping="0.5" name="slide_robot_x" pos="0 0 0" type="slide"/>
             <joint axis="0 1 0" damping="0.5" name="slide_robot_y" pos="0 0 0" type="slide"/>
             <joint axis="0 0 1" damping="1.0" name="slide_robot_z" pos="0 0 0" type="slide"/>
@@ -11,28 +12,27 @@
         </body> 
 
         <body name="ball" pos="10 -5 0">
-            <joint axis="1 0 0" damping="0.5" name="slide_ball_x" pos="0 0 0" type="slide"/>
-            <joint axis="0 1 0" damping="0.5" name="slide_ball_y" pos="0 0 0" type="slide"/>
-            <joint axis="0 0 1" damping="1.0" name="slide_ball_z" pos="0 0 0" type="slide"/>
-            <geom mass="1.0" pos="0 0 2" rgba="1 1 10 1" size="2.0" type="sphere"/>
+            <joint type="free"/> 
+            <geom condim="3" mass="1.0"  pos="0 0 2" rgba="1 1 10 1" size="2.0" type="sphere"/>
         </body>
 
         <body name="ball2" pos="-10 -5 0">
-            <joint axis="1 0 0" damping="0.5" name="slide_ball2_x" pos="0 0 0" type="slide"/>
-            <joint axis="0 1 0" damping="0.5" name="slide_ball2_y" pos="0 0 0" type="slide"/>
-            <joint axis="0 0 1" damping="1.0" name="slide_ball2_z" pos="0 0 0" type="slide"/>
-            <geom mass="1.0" pos="0 0 2" rgba="1 10 1 1" size="2.0" type="sphere"/>
+            <joint type="free"/> 
+            <geom condim="3" mass="1.0" pos="0 0 2" rgba="1 10 1 1" size="2.0" type="sphere"/>
         </body>
         
         <body name="ball3" pos="0 8.5 0">
-            <joint axis="1 0 0" damping="0.5" name="slide_ball3_x" pos="0 0 0" type="slide"/>
-            <joint axis="0 1 0" damping="0.5" name="slide_ball3_y" pos="0 0 0" type="slide"/>
-            <joint axis="0 0 1" damping="1.0" name="slide_ball3_z" pos="0 0 0" type="slide"/>
-            <geom mass="1.0" pos="0 0 2" rgba="10 1 1 1" size="2.0" type="sphere"/>
+            <joint type="free"/> 
+            <geom condim="3" mass="1.0" pos="0 0 2" rgba="10 1 1 1" size="2.0" type="sphere"/>
         </body>
         
+        <body name="robot2" pos="7.5 0 10">
+            <joint type="free"/> 
+            <geom mass="25.0" pos="10 -30 5" rgba="0.5 0.5 0.5 1.0" size="3.5 5.0 8.0" type="ellipsoid"/>
+        </body> 
+        
         <body name="floor" pos="0 0 -0.1">
-            <geom condim="3" size="90 60 0.1" friction="0.0 0.0 0.0" rgba="0.2 1.5 0.2 1" type="box"/>
+            <geom condim="3" size="90 60 0.1" friction="0.5 0.5 0.5" rgba="0.2 1.5 0.2 1" type="box"/>
         </body>
 
         <body name="wall1" pos="0 60 7.5">
