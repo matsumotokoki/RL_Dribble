@@ -11,23 +11,21 @@ class Dribble_Env(object):
         self.model = load_model_from_path("./xml/world2.xml") 
         self.sim = MjSim(self.model)
         # self.viewer = MyMjViewer(self.sim)
-        self.viewer = MjViewer(self.sim)
+        self.viewer = MyMjViewer(self.sim)
         self.max_vel = [-1000,1000]
         self.x_motor = 0
         self.y_motor = 0
 
     def step(self,action):
         self.x_motor = np.clip(self.x_motor + ((action %3)-1) *100,-1000,1000)
-        self.y_motor = np.clip(self.y_motor + ((action //3)-1) *100,-1000,1000)
+        # self.y_motor = np.clip(self.y_motor + ((action //3)-1) *100,-1000,1000)
         self.sim.data.ctrl[0] = self.x_motor 
-        self.sim.data.ctrl[1] = self.y_motor
+        # self.sim.data.ctrl[1] = self.y_motor
         # print(self.sim.data.ctrl)
         self.sim.step()
 
     def get_state(self):
         robot_x, robot_y = self.sim.data.body_xpos[1][0:2]
-        # TODO
-        # robot_xv, robot_xy = self.sim.data.qvel[1][0:2]
         ball_x, ball_y = self.sim.data.body_xpos[2][0:2]
         vx = self.sim.data.qvel[0:2]
         ball_pos_local = -(robot_x - ball_x), -(robot_y - ball_y)

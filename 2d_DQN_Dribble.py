@@ -1,5 +1,5 @@
 import numpy as np
-from drrible_env import Dribble_Env
+from drrible_env_2d import Dribble_Env
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
@@ -20,7 +20,7 @@ def huberloss(y_true, y_pred):
     return K.mean(loss)
 
 class QNetwork:
-    def __init__(self,learning_rate=0.01, state_size=4,action_size=9,hidden_size=10):
+    def __init__(self,learning_rate=0.01, state_size=4,action_size=3,hidden_size=10):
         self.action_size = action_size
         self.model = Sequential()
         self.model.add(Dense(hidden_size,activation='relu',input_dim=state_size))
@@ -69,7 +69,7 @@ class Actor:
             reTargetQs = mainQN.model.predict(state)[0]
             action = np.argmax(reTargetQs)
         else:
-            action = np.random.choice(9)
+            action = np.random.choice(3)
 
         return action
 
@@ -77,7 +77,7 @@ METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 300000
 max_number_of_steps = 200
-goal_average_reward = 1
+goal_average_reward = 10
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
 gamma = 0.99
@@ -99,7 +99,7 @@ actor = Actor()
 
 for episode in range(num_episodes):
     env.reset()
-    env.step(np.random.randint(9))
+    env.step(np.random.randint(3))
     state = env.get_state()[0:4]
     state = np.reshape(state, [1,4])
     # episode_reward = 0
@@ -109,8 +109,8 @@ for episode in range(num_episodes):
         if islearnd and RENDER_FLAG:
             env.render()
             time.sleep(0.01)
-        env.render()
-        time.sleep(0.01)
+        # env.render()
+        # time.sleep(0.01)
 
         action = actor.get_action(state, episode, mainQN)
         env.step((action))
@@ -146,7 +146,7 @@ for episode in range(num_episodes):
             total_reward_vec = np.hstack((total_reward_vec[1:], reward))
             ball_state = env.get_state()[4:6]
             # print('{:5d} Episode finished, {:6.2f} steps, ave: {:6.2f}, max: {:4d}'.format(episode,t+1,total_reward_vec.mean(),max_step+1),flush=True)
-            print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
+            print('{:5d} Episode finished, {:7.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
                     .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
             break
 
