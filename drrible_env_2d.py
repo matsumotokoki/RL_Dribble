@@ -8,7 +8,7 @@ import math
 
 class Dribble_Env(object):
     def __init__(self):
-        self.model = load_model_from_path("./xml/world2.xml") 
+        self.model = load_model_from_path("./xml/world3.xml") 
         self.sim = MjSim(self.model)
         # self.viewer = MyMjViewer(self.sim)
         self.viewer = MyMjViewer(self.sim)
@@ -29,12 +29,13 @@ class Dribble_Env(object):
         ball_x, ball_y = self.sim.data.body_xpos[2][0:2]
         vx = self.sim.data.qvel[0:2]
         ball_pos_local = -(robot_x - ball_x), -(robot_y - ball_y)
+        robot_vx = self.sim.data.qvel[0]
         # distance = math.sqrt(ball_pos_local[0]**2 + ball_pos_local[1]**2)
 
-        return [robot_x, robot_y, ball_pos_local[0], ball_pos_local[1], ball_x, ball_y]
+        return [robot_x, robot_y, ball_pos_local[0], ball_pos_local[1], robot_vx, ball_x, ball_y]
 
     def check_done(self):
-        ball_x ,ball_y = self.get_state()[4:]
+        ball_x ,ball_y = self.get_state()[5:]
         if ball_x < -80 and -25 < ball_y < 25:
             return True
         else:
