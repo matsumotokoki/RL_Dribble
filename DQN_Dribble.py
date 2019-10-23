@@ -20,7 +20,7 @@ def huberloss(y_true, y_pred):
     return K.mean(loss)
 
 class QNetwork:
-    def __init__(self,learning_rate=0.01, state_size=4,action_size=9,hidden_size=10):
+    def __init__(self,learning_rate=0.01, state_size=6,action_size=9,hidden_size=10):
         self.action_size = action_size
         self.model = Sequential()
         self.model.add(Dense(hidden_size,activation='relu',input_dim=state_size))
@@ -30,7 +30,7 @@ class QNetwork:
         self.model.compile(loss=huberloss,optimizer=self.optimizer)
 
     def replay(self, memory, batch_size, gamma, targetQN):
-        inputs = np.zeros((batch_size, 4))
+        inputs = np.zeros((batch_size, 6))
         targets = np.zeros((batch_size, self.action_size))
         mini_batch = memory.sample(batch_size)
 
@@ -100,8 +100,8 @@ actor = Actor()
 for episode in range(num_episodes):
     env.reset()
     env.step(np.random.randint(9))
-    state = env.get_state()[0:4]
-    state = np.reshape(state, [1,4])
+    state = env.get_state()[0:6]
+    state = np.reshape(state, [1,6])
     # episode_reward = 0
     targetQN.model.set_weights(mainQN.model.get_weights())
 
@@ -114,10 +114,10 @@ for episode in range(num_episodes):
 
         action = actor.get_action(state, episode, mainQN)
         env.step((action))
-        next_state = env.get_state()[0:4]
-        ball_state = env.get_state()[4:6]
+        next_state = env.get_state()[0:6]
+        ball_state = env.get_state()[6:8]
         goal_distance = math.sqrt((ball_state[0] + 90)**2 + ball_state[1]**2)
-        next_state = np.reshape(next_state,[1,4])
+        next_state = np.reshape(next_state,[1,6])
         done = env.check_done()
 
         if done:
@@ -144,7 +144,7 @@ for episode in range(num_episodes):
             if max_step < t:
                 max_step = t
             total_reward_vec = np.hstack((total_reward_vec[1:], reward))
-            ball_state = env.get_state()[4:6]
+            ball_state = env.get_state()[6:8]
             # print('{:5d} Episode finished, {:6.2f} steps, ave: {:6.2f}, max: {:4d}'.format(episode,t+1,total_reward_vec.mean(),max_step+1),flush=True)
             print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
                     .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
