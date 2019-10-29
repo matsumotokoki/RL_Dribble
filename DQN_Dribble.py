@@ -75,9 +75,9 @@ class Actor:
 
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
-num_episodes = 300000
+num_episodes = 3000
 max_number_of_steps = 200
-goal_average_reward = 1
+goal_average_reward = 100
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
 gamma = 0.99
@@ -102,33 +102,49 @@ for episode in range(num_episodes):
     env.step(np.random.randint(9))
     state = env.get_state()[0:6]
     state = np.reshape(state, [1,6])
-    # episode_reward = 0
+    episode_reward = 0
     targetQN.model.set_weights(mainQN.model.get_weights())
 
     for t in range(max_number_of_steps):
         if islearnd and RENDER_FLAG:
             env.render()
             time.sleep(0.01)
-        env.render()
-        time.sleep(0.01)
+        # env.render()
+        # time.sleep(0.01)
 
         action = actor.get_action(state, episode, mainQN)
         env.step((action))
         next_state = env.get_state()[0:6]
         ball_state = env.get_state()[6:8]
+        ball_vel   = env.get_state()[8:10]
         goal_distance = math.sqrt((ball_state[0] + 90)**2 + ball_state[1]**2)
         next_state = np.reshape(next_state,[1,6])
         done = env.check_done()
 
+        # if done:
+        #     reward = 10
+        # elif t == 199:
+        #     # reward = -goal_distance
+        #     reward = -10
+        # else:
+        #     reward = 0
+        # if done:
+        #     reward = 100
+        # elif t == 199:
+        #     if goal_distance >= 150:
+        #         reward = -100
+        #     else:
+        #         reward = -goal_distance * 0.1 
+        # else:
+        #     reward = 0
         if done:
-            reward = 10
-        elif t == 199:
-            # reward = -goal_distance
-            reward = -10
+            reward = 100
+        elif ball_vel[0] < -1:
+            reward = 1
         else:
             reward = 0
 
-        # episode_reward += 1
+        episode_reward += reward
         memory.add((state,action,reward,next_state))
         state = next_state
         
@@ -143,11 +159,12 @@ for episode in range(num_episodes):
         if done or t >= 199:
             if max_step < t:
                 max_step = t
-            total_reward_vec = np.hstack((total_reward_vec[1:], reward))
+            total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
             ball_state = env.get_state()[6:8]
-            # print('{:5d} Episode finished, {:6.2f} steps, ave: {:6.2f}, max: {:4d}'.format(episode,t+1,total_reward_vec.mean(),max_step+1),flush=True)
-            print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
-                    .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
+            # print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
+            #         .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
+            print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
+                    .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],150-goal_distance),flush=True)
             break
 
     if total_reward_vec.mean() >= goal_average_reward:
