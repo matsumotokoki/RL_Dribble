@@ -76,10 +76,11 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 200
-goal_average_reward = 1000
+max_number_of_steps = 300
+goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
+done_vec = np.zeros(num_consecutive_iterations)
 gamma = 0.99
 islearnd = False
 isrender = False
@@ -88,12 +89,13 @@ learning_rate = 0.0001
 memory_size = 10000
 batch_size = 100
 max_step = 0
+done_count = 0
 env = Dribble_Env()
 
 
 mainQN = QNetwork(hidden_size=hidden_size, learning_rate=learning_rate)
 targetQN = QNetwork(hidden_size=hidden_size, learning_rate=learning_rate)
-plot_model(mainQN.model, to_file='Qnetwork.png', show_shapes=True) 
+# plot_model(mainQN.model, to_file='Qnetwork.png', show_shapes=True) 
 memory = Memory(max_size = memory_size)
 actor = Actor()
 
@@ -103,43 +105,46 @@ for episode in range(num_episodes):
     state = env.get_state()[0:6]
     state = np.reshape(state, [1,6])
     episode_reward = 0
+    done_count = 0
     targetQN.model.set_weights(mainQN.model.get_weights())
 
     for t in range(max_number_of_steps):
         if (islearnd and RENDER_FLAG) or (episode+1)%10 == 0:
             env.render()
             time.sleep(0.01)
-        # env.render()
-        # time.sleep(0.01)
+        elif (episode+1)%10 == 0:
+            env.render()
+            time.sleep(0.01)
+        else:
+            pass
 
         action = actor.get_action(state, episode, mainQN)
         env.step((action))
         next_state = env.get_state()[0:6]
         ball_state = env.get_state()[6:8]
         ball_vel   = env.get_state()[8:10]
-        goal_distance = math.sqrt((ball_state[0] + 90)**2 + ball_state[1]**2)
-        goal_arr = (-ball_state[1])/(-90 - ball_state[0])
-        if ball_vel[0]:
-            goal_oriented_arr = (ball_vel[1])/(ball_vel[0])
-        elif ball_vel[1] > 0:
-            goal_oriented_arr = 100
-        else:
-            goal_oriented_arr = -100
+        goal_distance = math.sqrt((-ball_state[0] + 90)**2 + ball_state[1]**2)
+
+        goal_arr = math.degrees(math.atan2(-ball_state[1],ball_state[0]+90)) 
+        goal_oriented_arr = math.degrees(math.atan2(ball_vel[1],ball_vel[0])) if math.fabs(ball_vel[0]) > 0.1 else None
 
         ball_dist = math.sqrt((ball_state[0] - next_state[0])**2 + (ball_state[1] - next_state[1])**2)
         next_state = np.reshape(next_state,[1,6])
         done = env.check_done()
 
         reward = 0
-        # if done:
-        #     reward = 100
-        if ball_dist < 10:
+        if ball_dist < 10 and ball_state[0] > next_state[0][0]:
             reward = 1
-        if ball_vel[0] < 0:
-            diff_arr = math.fabs(goal_arr - goal_oriented_arr)
-            reward += (10 - diff_arr)/10 * math.fabs(ball_vel[0]/10)
         else:
-            reward = 0
+            reward = -0.1
+        if goal_oriented_arr:
+            diff_arr = math.fabs(goal_arr - goal_oriented_arr)
+            reward += (180 - diff_arr)/100
+            # reward += (10 - diff_arr)/10 * math.fabs(ball_vel[0]/10)
+        if done:
+            print("done!")
+            reward = 100
+            done_count = 1
 
         episode_reward += reward
         memory.add((state,action,reward,next_state))
@@ -153,18 +158,17 @@ for episode in range(num_episodes):
         else:
             pass
 
-        if done or t >= 199:
-            if max_step < t:
-                max_step = t
+        if done or t >= max_number_of_steps-1:
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
+            done_vec = np.hstack((done_vec[1:], done_count))
             ball_state = env.get_state()[6:8]
             # print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
             #         .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
             print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
-                    .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],150-goal_distance),flush=True)
+                    .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance),flush=True)
             break
 
-    if total_reward_vec.mean() >= goal_average_reward:
+    if done_vec.mean() >= goal_average_reward:
         if not islearnd:
             print('Episode {:5d} train agent successfuly!'.format(episode+1))
         islearnd = True

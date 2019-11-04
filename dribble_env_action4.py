@@ -42,7 +42,7 @@ class Dribble_Env(object):
 
     def check_done(self):
         ball_x ,ball_y = self.get_state()[6:8]
-        if ball_x < -80 and -25 < ball_y < 25:
+        if ball_x > 80 and -25 < ball_y < 25:
             return True
         else:
             return False

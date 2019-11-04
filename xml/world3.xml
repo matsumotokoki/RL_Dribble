@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<mujoco>
+    <compiler inertiafromgeom="true" angle="degree"/>
+    <option gravity="0 0 -9.81" integrator="RK4" timestep="0.05" wind="0 0 0">  
+        <flag frictionloss="enable" energy="enable" />
+    </option>
+    <!-- <size nuser_cam="2"/>    -->
+    <visual>  
+        <global fovy="45" glow="1.0" />
+        <map force="1" /> 
+        <rgba fog="0 0 0 1" />
+    </visual>
+
+    <asset>
+		<texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" 
+            rgb2="0 0 0"/>  
+        <!-- <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278"  -->
+        <!--     rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>   -->
+        <!-- <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"  -->
+        <!--     width="512" height="512"/>   -->
+        <!--  -->
+        <!-- <material name='MatPlane' reflectance='0.5' texture="texplane" texrepeat="1 1" texuniform="true"/> -->
+        <!-- <material name='geom' texture="texgeom" texuniform="true"/> -->
+    </asset>
+    
+    <worldbody>
+        <!-- <light attenuation="0.3 0.3 0.3"/> -->
+        <body name="robot" pos="-70 0 0">
+            <joint axis="1 0 0" damping="1.0" name="slide_robot_x" pos="0 0 0" type="slide"/>
+            <joint axis="0 1 0" damping="1.0" name="slide_robot_y" pos="0 0 0" type="slide"/>
+            <geom mass="25.0" pos="0 0 8" rgba="0.5 0.5 0.5 1.0" size="4 8.0" type="cylinder"/>
+        </body> 
+
+        <body name="ball" pos="-61 0 0" >
+            <!-- <joint type="free"/>  -->
+            <joint axis="1 0 0 " damping="1.0" name="ball_x" pos="0 0 0" type="slide"/>
+            <joint axis="0 1 0 " damping="1.0" name="ball_y" pos="0 0 0" type="slide"/>
+            <joint axis="0 0 1 " damping="1.0" name="ball_z" pos="0 0 0" type="slide"/>
+            <geom condim="3" mass="1.0"  pos="0 0 5" friction="0 0 0.5" rgba="0 0.55 0.75 1" size="4 4" type="cylinder"/>
+        </body>
+
+        <body name="floor" pos="0 0 -0.1">
+            <geom condim="1" size="90 60 0.1" friction="0.5 0.5 0.5" rgba="0.2 1.5 0.2 1" type="plane"/>
+        </body>
+
+        <body name="wall1" pos="0 60 7.5">
+            <geom condim="1" size="90 0.2 7.5" friction="0.0 0.0 0.0" rgba="1.5 0.2 2.5 0.2" type="box"/>
+        </body>
+
+        <body name="wall2" pos="90 0 7.5">
+            <geom condim="1" size="0.2 60 7.5" friction="0.0 0.0 0.0" rgba="1.5 0.2 2.5 0.2" type="box"/>
+        </body>
+
+        <body name="wall3" pos="-90 0 7.5">
+            <geom condim="1" size="0.2 60 7.5" friction="0.0 0.0 0.0" rgba="1.5 0.2 2.5 0.2" type="box"/>
+        </body>
+
+        <body name="wall4" pos="0 -60 7.5">
+            <geom condim="1" size="90 0.2 7.5" friction="0.0 0.0 0.0" rgba="1.5 0.2 2.5 0.2" type="box"/>
+        </body>
+
+        <body name="goal_poal1" pos="90 -25 20">
+            <geom condim="1" size="2 2 20" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+        <body name="goal_poal2" pos="-90 25 20">
+            <geom condim="1" size="2 2 20" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+        <body name="goal_poal3" pos="-90 -25 20">
+            <geom condim="1" size="2 2 20" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+        <body name="goal_poal4" pos="90 25 20">
+            <geom condim="1" size="2 2 20" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+        <body name="goal_poal5" pos="90 0 38">
+            <geom condim="1" size="2 25 2" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+        <body name="goal_poal6" pos="-90 0 38">
+            <geom condim="1" size="2 25 2" friction="0.0 0.0 0.0" rgba="10 10 10 1" type="box"/>
+        </body>
+    </worldbody>
+    <actuator>
+        <velocity gear="35.0" joint="slide_robot_x"/>
+        <velocity gear="35.0" joint="slide_robot_y"/>
+    </actuator>
+</mujoco>

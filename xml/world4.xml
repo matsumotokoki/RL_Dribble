@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<mujoco>
+    <compiler inertiafromgeom="true" angle="degree"/>
+    <option gravity="0 0 -9.81" integrator="RK4" timestep="0.05" wind="0 0 0">  
+        <flag frictionloss="enable" energy="enable" />
+    </option>
+    <!-- <size nuser_cam="2"/>    -->
+    <visual>  
+        <global fovy="45" glow="1.0" />
+        <map force="1" /> 
+        <rgba fog="0 0 0 1" />
+    </visual>
+
+    <asset>
+		<texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" 
+            rgb2="0 0 0"/>  
+    </asset>
+    
+    <worldbody>
+        <!-- <light attenuation="0.3 0.3 0.3"/> -->
+        <body name="robot" pos="90 0 0">
+            <joint axis="1 0 0" damping="1.0" name="slide_robot_x" pos="0 0 0" type="slide"/>
+            <joint axis="0 1 0" damping="1.0" name="slide_robot_y" pos="0 0 0" type="slide"/>
+            <joint axis="0 0 1" damping="1.0" name="slide_robot_z" pos="0 0 0" type="slide"/>
+            <geom mass="25.0" pos="0 0 8" rgba="0.5 0.5 0.5 1.0" size="4 8.0" type="cylinder"/>
+        </body> 
+
+        <body name="ball" pos="80 0 0" >
+            <joint axis="1 0 0 " damping="1.0" name="ball_x" pos="0 0 0" type="slide"/>
+            <joint axis="0 1 0 " damping="1.0" name="ball_y" pos="0 0 0" type="slide"/>
+            <joint axis="0 0 1 " damping="1.0" name="ball_z" pos="0 0 0" type="slide"/>
+            <geom condim="3" mass="1.0"  pos="0 0 5" friction="0 0 0.5" rgba="0 0.55 0.75 1" size="4 4" type="cylinder"/>
+        </body>
+
+        <body name="floor" pos="0 0 -0.1">
+            <geom condim="1" size="100 40 0.1" friction="0.5 0.5 0.5" rgba="0.2 1.5 0.2 1" type="box"/>
+        </body>
+
+    </worldbody>
+    <actuator>
+        <velocity gear="35.0" joint="slide_robot_x"/>
+        <velocity gear="35.0" joint="slide_robot_y"/>
+    </actuator>
+</mujoco>
