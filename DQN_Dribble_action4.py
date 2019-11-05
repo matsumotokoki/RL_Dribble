@@ -1,5 +1,6 @@
 import numpy as np
 from dribble_env_action4 import Dribble_Env
+from matplotlib import pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
@@ -76,7 +77,7 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 300
+max_number_of_steps = 500
 goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
@@ -109,12 +110,12 @@ for episode in range(num_episodes):
     targetQN.model.set_weights(mainQN.model.get_weights())
 
     for t in range(max_number_of_steps):
-        if (islearnd and RENDER_FLAG) or (episode+1)%10 == 0:
+        if (islearnd and RENDER_FLAG):
             env.render()
             time.sleep(0.01)
-        elif (episode+1)%10 == 0:
-            env.render()
-            time.sleep(0.01)
+        # elif (episode+1)%10 == 0:
+        #     env.render()
+        #     time.sleep(0.01)
         else:
             pass
 
@@ -139,7 +140,9 @@ for episode in range(num_episodes):
             reward = -0.1
         if goal_oriented_arr:
             diff_arr = math.fabs(goal_arr - goal_oriented_arr)
-            reward += (180 - diff_arr)/100
+            reward += (90 - diff_arr)/100
+        else:
+            reward += -0.1
             # reward += (10 - diff_arr)/10 * math.fabs(ball_vel[0]/10)
         if done:
             print("done!")
@@ -157,6 +160,7 @@ for episode in range(num_episodes):
             targetQN.model.set_weights(mainQN.model.get_weights())
         else:
             pass
+        env.plot_data(max_number_of_steps,t,done)
 
         if done or t >= max_number_of_steps-1:
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))

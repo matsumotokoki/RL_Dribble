@@ -1,6 +1,7 @@
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, MjViewer
 from mymjviewer import MyMjViewer
+from matplotlib import pyplot as plt
 import random
 import glfw
 import time
@@ -11,7 +12,7 @@ class Dribble_Env(object):
         self.model = load_model_from_path("./xml/world3.xml") 
         self.sim = MjSim(self.model)
         # self.viewer = MyMjViewer(self.sim)
-        self.viewer = MjViewer(self.sim)
+        self.viewer = MyMjViewer(self.sim)
         self.max_vel = [-1000,1000]
         self.x_motor = 0
         self.y_motor = 0
@@ -50,7 +51,32 @@ class Dribble_Env(object):
     def reset(self):
         self.x_motor = 0
         self.y_motor = 0
+        self.robot_x_data = []
+        self.robot_y_data = []
+        self.ball_x_data = []
+        self.ball_y_data = []
         self.sim.reset()
 
     def render(self):
         self.viewer.render()
+
+    def plot_data(self,step,t,done):
+        self.field_x = [-90,-90,90,90,-90]
+        self.field_y = [-60,60,60,-60,-60]
+        self.robot_x_data.append(self.sim.data.body_xpos[1][0])
+        self.robot_y_data.append(self.sim.data.body_xpos[1][1])
+        self.ball_x_data.append(self.sim.data.body_xpos[2][0])
+        self.ball_y_data.append(self.sim.data.body_xpos[2][1])
+        if t >= step-1 or done:
+            fig1 = plt.figure()
+            plt.ion()
+            plt.show()
+            plt.plot(self.ball_x_data,self.ball_y_data,marker='o',markersize=2,color="red",label="ball")
+            plt.plot(self.robot_x_data,self.robot_y_data,marker="o",markersize=2,color='blue',label="robot")
+            plt.plot(self.field_x,self.field_y,markersize=1,color="black")
+            plt.plot(80,0,marker="X",color="green",label="goal")
+            plt.legend(loc="lower right")
+            # plt.axes().set_aspect('equal')
+            plt.draw()
+            plt.pause(0.001)
+            plt.close(1)
