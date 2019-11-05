@@ -126,7 +126,7 @@ for episode in range(num_episodes):
         ball_vel   = env.get_state()[8:10]
         goal_distance = math.sqrt((-ball_state[0] + 90)**2 + ball_state[1]**2)
 
-        goal_arr = math.degrees(math.atan2(-ball_state[1],ball_state[0]+90)) 
+        goal_arr = math.degrees(math.atan2(-ball_state[1],-ball_state[0]+90)) 
         goal_oriented_arr = math.degrees(math.atan2(ball_vel[1],ball_vel[0])) if math.fabs(ball_vel[0]) > 0.1 else None
 
         ball_dist = math.sqrt((ball_state[0] - next_state[0])**2 + (ball_state[1] - next_state[1])**2)
@@ -134,10 +134,10 @@ for episode in range(num_episodes):
         done = env.check_done()
 
         reward = 0
-        if ball_dist < 10 and ball_state[0] > next_state[0][0]:
-            reward = 1
-        else:
-            reward = -0.1
+        # if ball_dist < 10 and ball_state[0] > next_state[0][0]:
+        #     reward = 1
+        # else:
+        #     reward = -0.1
         if goal_oriented_arr:
             diff_arr = math.fabs(goal_arr - goal_oriented_arr)
             reward += (90 - diff_arr)/100
