@@ -143,7 +143,6 @@ for episode in range(num_episodes):
             reward += (90 - diff_arr)/100
         else:
             reward += -0.1
-            # reward += (10 - diff_arr)/10 * math.fabs(ball_vel[0]/10)
         if done:
             print("done!")
             reward = 100
