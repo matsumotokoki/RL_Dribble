@@ -77,7 +77,7 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 300
+max_number_of_steps = 500
 goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
@@ -135,10 +135,10 @@ for episode in range(num_episodes):
         done = env.check_done()
 
         reward = 0
-        # if ball_dist < 10 and ball_state[0] > next_state[0][0]:
-        #     reward = 1
-        # else:
-        #     reward = -0.1
+        if ball_dist < 10 and ball_state[0] > next_state[0][0]:
+            reward = 1
+        else:
+            reward = -0.1
         if goal_oriented_arr:
             diff_arr = math.fabs(goal_arr - goal_oriented_arr)
             reward += (90 - diff_arr)/100
@@ -170,6 +170,8 @@ for episode in range(num_episodes):
             #         .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
             print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
                     .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance),flush=True)
+            with open(env.path + "/log.txt",'a') as f:
+                f.write('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}\n'.format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance))
             break
 
     if done_vec.mean() >= goal_average_reward:

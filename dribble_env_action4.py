@@ -61,6 +61,8 @@ class Dribble_Env(object):
         self.ball_x_data = []
         self.ball_y_data = []
         self.sim.reset()
+        self.sim.data.qpos[0] = np.random.randint(-3,3)
+        self.sim.data.qpos[1] = np.random.randint(-3,3)
 
     def render(self):
         self.viewer.render()
