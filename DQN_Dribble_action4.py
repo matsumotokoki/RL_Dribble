@@ -77,7 +77,7 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 500
+max_number_of_steps = 300
 goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
@@ -91,6 +91,7 @@ memory_size = 10000
 batch_size = 100
 max_step = 0
 done_count = 0
+plot_flag = False
 env = Dribble_Env()
 
 
@@ -159,7 +160,7 @@ for episode in range(num_episodes):
             targetQN.model.set_weights(mainQN.model.get_weights())
         else:
             pass
-        env.plot_data(max_number_of_steps,t,done)
+        env.plot_data(max_number_of_steps,t,done,episode,plot_flag)
 
         if done or t >= max_number_of_steps-1:
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))

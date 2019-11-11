@@ -6,6 +6,8 @@ import random
 import glfw
 import time
 import math
+import os
+import datetime
 
 class Dribble_Env(object):
     def __init__(self):
@@ -16,6 +18,9 @@ class Dribble_Env(object):
         self.max_vel = [-1000,1000]
         self.x_motor = 0
         self.y_motor = 0
+        self.date_time = datetime.datetime.now()
+        self.path = "./datas/path_date" + str(self.date_time.strftime("_%Y%m%d_%H%M%S"))
+        os.mkdir(self.path)
 
     def step(self,action):
         # self.x_motor = np.clip(self.x_motor + ((action %3)-1) *100,-500,500)
@@ -60,14 +65,19 @@ class Dribble_Env(object):
     def render(self):
         self.viewer.render()
 
-    def plot_data(self,step,t,done):
+    def plot_data(self,step,t,done,episode,flag):
         self.field_x = [-90,-90,90,90,-90]
         self.field_y = [-60,60,60,-60,-60]
         self.robot_x_data.append(self.sim.data.body_xpos[1][0])
         self.robot_y_data.append(self.sim.data.body_xpos[1][1])
         self.ball_x_data.append(self.sim.data.body_xpos[2][0])
         self.ball_y_data.append(self.sim.data.body_xpos[2][1])
-        if t >= step-1 or done:
+
+        datas = str(self.robot_x_data[-1])+" "+str(self.robot_y_data[-1])+" "+str(self.ball_x_data[-1])+" "+str(self.ball_y_data[-1])
+        with open(self.path + '/plotdata_' + str(episode+1).zfill(4)+ '.txt','a') as f:
+            f.write(str(datas)+'\n')
+        
+        if (t >= step-1 or done) and flag:
             fig1 = plt.figure()
             plt.ion()
             plt.show()
