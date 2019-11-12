@@ -16,9 +16,9 @@ field_x = [-90,-90,90,90,-90]
 field_y = [-60,60,60,-60,-60]
 for i in range(len(data)):
     print(data[i])
-    fig1 = plt.figure()
+    # fig1 = plt.figure()
     plt.ion()
-    plt.show()
+    # plt.show()
     plt.plot(data[i][2],data[i][3],marker='o',markersize=12,color="red",label="ball")
     plt.plot(data[i][0],data[i][1],marker="o",markersize=12,color='blue',label="robot")
     plt.plot(field_x,field_y,markersize=1,color="black")
@@ -27,4 +27,5 @@ for i in range(len(data)):
     # plt.axes().set_aspect('equal')
     plt.draw()
     plt.pause(0.01)
-    plt.close(1)
+    if i == 0:input("press enter") 
+    plt.cla()

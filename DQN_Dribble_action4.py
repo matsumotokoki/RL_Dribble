@@ -77,7 +77,7 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 500
+max_number_of_steps = 600
 goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
@@ -134,19 +134,25 @@ for episode in range(num_episodes):
         next_state = np.reshape(next_state,[1,6])
         done = env.check_done()
 
+        goal_arrvec = [-ball_state[1]/math.sqrt(ball_state[1]**2+(90-ball_state[0])**2)\
+                ,(-ball_state[0]+90)/math.sqrt(ball_state[1]**2+(90-ball_state[0])**2)]
+        ball_varrvec = [ball_vel[1],ball_vel[0]]
+
         reward = 0
         if ball_dist < 10 and ball_state[0] > next_state[0][0]:
             reward = 1
         else:
             reward = -0.1
         if goal_oriented_arr:
-            diff_arr = math.fabs(goal_arr - goal_oriented_arr)
-            reward += (90 - diff_arr)/100
+            dot = goal_arrvec[0]*ball_varrvec[0] + goal_arrvec[1]*ball_varrvec[1]
+            reward += dot
         else:
             reward += -0.1
+        if env.check_wall():
+            reward = -100
         if done:
             print("done!")
-            reward = 100
+            reward = 500
             done_count = 1
 
         episode_reward += reward
@@ -160,14 +166,12 @@ for episode in range(num_episodes):
             targetQN.model.set_weights(mainQN.model.get_weights())
         else:
             pass
-        env.plot_data(max_number_of_steps,t,done,episode,plot_flag)
+        env.plot_data(max_number_of_steps,t,done,episode,plot_flag,reward)
 
-        if done or t >= max_number_of_steps-1:
+        if done or t >= max_number_of_steps-1 or env.check_wall():
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
             done_vec = np.hstack((done_vec[1:], done_count))
             ball_state = env.get_state()[6:8]
-            # print('{:5d} Episode finished, {:6.2f} steps, reward: {:7.2f}, ave: {:7.2f}, ball_x: {:6.2f}, ball_y: {:6.2f}'\
-            #         .format(episode+1,t+1,reward,total_reward_vec.mean(),ball_state[0],ball_state[1]),flush=True)
             print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
                     .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance),flush=True)
             with open(env.path + "/log.txt",'a') as f:

@@ -53,6 +53,13 @@ class Dribble_Env(object):
         else:
             return False
 
+    def check_wall(self):
+        ball_x, ball_y = self.get_state()[6:8]
+        if math.fabs(ball_y) > 51:
+            return True
+        else:
+            return False
+
     def reset(self):
         self.x_motor = 0
         self.y_motor = 0
@@ -61,13 +68,13 @@ class Dribble_Env(object):
         self.ball_x_data = []
         self.ball_y_data = []
         self.sim.reset()
-        self.sim.data.qpos[0] = np.random.randint(-3,3)
-        self.sim.data.qpos[1] = np.random.randint(-3,3)
+        # self.sim.data.qpos[0] = np.random.randint(-3,3)
+        self.sim.data.qpos[1] = np.random.randint(-5,5)
 
     def render(self):
         self.viewer.render()
 
-    def plot_data(self,step,t,done,episode,flag):
+    def plot_data(self,step,t,done,episode,flag,reward):
         self.field_x = [-90,-90,90,90,-90]
         self.field_y = [-60,60,60,-60,-60]
         self.robot_x_data.append(self.sim.data.body_xpos[1][0])
@@ -75,7 +82,7 @@ class Dribble_Env(object):
         self.ball_x_data.append(self.sim.data.body_xpos[2][0])
         self.ball_y_data.append(self.sim.data.body_xpos[2][1])
 
-        datas = str(self.robot_x_data[-1])+" "+str(self.robot_y_data[-1])+" "+str(self.ball_x_data[-1])+" "+str(self.ball_y_data[-1])
+        datas = str(self.robot_x_data[-1])+" "+str(self.robot_y_data[-1])+" "+str(self.ball_x_data[-1])+" "+str(self.ball_y_data[-1])+" "+str(reward)
         with open(self.path + '/plotdata_' + str(episode+1).zfill(4)+ '.txt','a') as f:
             f.write(str(datas)+'\n')
         
