@@ -36,7 +36,6 @@ class Dribble_Env(object):
 
     def get_state(self):
         robot_x, robot_y = self.sim.data.body_xpos[1][0:2]
-        # TODO
         robot_xv, robot_yv = self.sim.data.qvel[0:2]
         ball_x, ball_y = self.sim.data.body_xpos[2][0:2]
         ball_xv, ball_yv = self.sim.data.qvel[2:4]

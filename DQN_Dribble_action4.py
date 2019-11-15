@@ -139,10 +139,10 @@ for episode in range(num_episodes):
         ball_varrvec = [ball_vel[1],ball_vel[0]]
 
         reward = 0
-        if ball_dist < 10 and ball_state[0] > next_state[0][0]:
-            reward = 1
-        else:
-            reward = -0.1
+        # if ball_dist < 10 and ball_state[0] > next_state[0][0]:
+        #     reward = 1
+        # else:
+        #     reward = -0.1
         if goal_oriented_arr:
             dot = goal_arrvec[0]*ball_varrvec[0] + goal_arrvec[1]*ball_varrvec[1]
             reward += dot
