@@ -171,6 +171,7 @@ for episode in range(num_episodes):
         if done or t >= max_number_of_steps-1 or env.check_wall():
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
             done_vec = np.hstack((done_vec[1:], done_count))
+            done_count = 0
             ball_state = env.get_state()[6:8]
             print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
                     .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance),flush=True)
