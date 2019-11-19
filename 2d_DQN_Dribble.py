@@ -1,5 +1,5 @@
 import numpy as np
-from drrible_env_2d import Dribble_Env
+from dribble_env_2d import Dribble_Env
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam

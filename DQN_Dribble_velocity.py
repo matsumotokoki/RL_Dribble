@@ -1,5 +1,5 @@
 import numpy as np
-from dribble_env_action4 import Dribble_Env
+from dribble_env_velocity import Dribble_Env
 from matplotlib import pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
