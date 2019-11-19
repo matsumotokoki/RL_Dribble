@@ -23,15 +23,10 @@ class Dribble_Env(object):
         os.mkdir(self.path)
 
     def step(self,action):
-        # self.x_motor = np.clip(self.x_motor + ((action %3)-1) *100,-500,500)
-        # self.y_motor = np.clip(self.y_motor + ((action //3)-1) *100,-500,500)
         self.x_motor = ((action %3)-1) * 200
         self.y_motor = ((action//3)-1) * 200
         self.sim.data.ctrl[0] = self.x_motor 
         self.sim.data.ctrl[1] = self.y_motor
-        # print("---------------------")
-        # print(self.x_motor,self.y_motor,action)
-        # print(self.sim.data.ctrl)
         self.sim.step()
 
     def get_state(self):
@@ -40,7 +35,6 @@ class Dribble_Env(object):
         ball_x, ball_y = self.sim.data.body_xpos[2][0:2]
         ball_xv, ball_yv = self.sim.data.qvel[2:4]
         ball_pos_local = -(robot_x - ball_x), -(robot_y - ball_y)
-        # distance = math.sqrt(ball_pos_local[0]**2 + ball_pos_local[1]**2)
 
         return [robot_x, robot_y, ball_pos_local[0], ball_pos_local[1], \
                 robot_xv, robot_yv, ball_x, ball_y,ball_xv,ball_yv]
@@ -59,6 +53,7 @@ class Dribble_Env(object):
         else:
             return False
 
+            
     def reset(self):
         self.x_motor = 0
         self.y_motor = 0

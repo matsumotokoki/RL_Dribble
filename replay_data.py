@@ -25,5 +25,5 @@ for i in range(len(data)):
     plt.axes().set_aspect('equal')
     plt.draw()
     plt.pause(0.01)
-    if i == 0:input("press enter") 
+    if i == 0 or i == len(data)-1:input("press enter") 
     plt.cla()
