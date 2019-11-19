@@ -56,7 +56,7 @@ class Dribble_Env(object):
     def check_avoidaince(self,object_num=4):
         for i in range(object_num):
             print(self.sim.data.qvel[6+3*i],self.sim.data.qvel[7+3*i])
-            if math.fabs(self.sim.data.qvel[6+3*i]) > 0.1 or math.fabs(self.sim.data.qvel[7+3*i]) > 0.1
+            if math.fabs(self.sim.data.qvel[6+3*i]) > 0.1 or math.fabs(self.sim.data.qvel[7+3*i]) > 0.1:
                 return True
             else:
                 return False
