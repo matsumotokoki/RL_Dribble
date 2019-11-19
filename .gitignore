@@ -1,5 +1,6 @@
-./__pycache__/
-./data/
-./png/sim_data.png
-./temp/
-./xml/tendon.xml
+/__pycache__/
+/png/sim_data.png
+/temp/
+/xml/tendon.xml
+/chainerRL/
+/datas/
