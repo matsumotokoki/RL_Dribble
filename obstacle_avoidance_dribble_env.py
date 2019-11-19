@@ -59,7 +59,7 @@ class Dribble_Env(object):
             if math.fabs(self.sim.data.qvel[6+3*i]) > 0.1 or math.fabs(self.sim.data.qvel[7+3*i]) > 0.1
                 return True
             else:
-                False
+                return False
 
     def reset(self):
         self.x_motor = 0
