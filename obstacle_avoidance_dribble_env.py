@@ -55,15 +55,14 @@ class Dribble_Env(object):
         
     def check_avoidaince(self,object_num=4):
         for i in range(object_num):
-            print(self.sim.data.qvel[6+3*i],self.sim.data.qvel[7+3*i])
-            if math.fabs(self.sim.data.qvel[6+3*i]) > 0.1 or math.fabs(self.sim.data.qvel[7+3*i]) > 0.1:
+            if math.fabs(self.sim.data.qvel[5+i*3]) > 0.1 or math.fabs(self.sim.data.qvel[6+3*i]) > 0.1:
                 return True
-            else:
-                return False
+        return False
 
     def reset(self):
         self.x_motor = 0
         self.y_motor = 0
+
         self.robot_x_data = []
         self.robot_y_data = []
         self.ball_x_data = []
@@ -93,10 +92,13 @@ class Dribble_Env(object):
             plt.show()
             plt.plot(self.ball_x_data,self.ball_y_data,marker='o',markersize=2,color="red",label="ball")
             plt.plot(self.robot_x_data,self.robot_y_data,marker="o",markersize=2,color='blue',label="robot")
+            plt.plot(self.sim.data.body_xpos[3][0],self.sim.data.body_xpos[3][1],marker="o",markersize=8,color='black')
+            plt.plot(self.sim.data.body_xpos[4][0],self.sim.data.body_xpos[4][1],marker="o",markersize=8,color='black')
+            plt.plot(self.sim.data.body_xpos[5][0],self.sim.data.body_xpos[5][1],marker="o",markersize=8,color='black')
+            plt.plot(self.sim.data.body_xpos[6][0],self.sim.data.body_xpos[6][1],marker="o",markersize=8,color='black')
             plt.plot(self.field_x,self.field_y,markersize=1,color="black")
             plt.plot(80,0,marker="X",color="green",label="goal")
             plt.legend(loc="lower right")
-            # plt.axes().set_aspect('equal')
             plt.draw()
             plt.pause(0.001)
             plt.close(1)

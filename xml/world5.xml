@@ -34,7 +34,7 @@
             <joint axis="1 0 0 " damping="1.0" name="ball2_x" pos="0 0 0" type="slide"/>
             <joint axis="0 1 0 " damping="1.0" name="ball2_y" pos="0 0 0" type="slide"/>
             <joint axis="0 0 1 " damping="1.0" name="ball2_z" pos="0 0 0" type="slide"/>
-            <geom condim="3" mass="50.0"  pos="0 0 5" friction="0 0 0.5" rgba="1 0 0 1" size="4 5" type="cylinder"/>
+            <geom condim="3" mass="50.0"  pos="0 0 5" friction="0 0 0.5" rgba="1 0 0 1" size="4 4" type="cylinder"/>
         </body>
 
         <body name="object_2" pos="60 0 0" >

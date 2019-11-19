@@ -77,7 +77,7 @@ class Actor:
 METHOD_STR = "DDQN" #DQN or DDQN
 RENDER_FLAG = True
 num_episodes = 3000
-max_number_of_steps = 100
+max_number_of_steps = 600
 goal_average_reward = 1
 num_consecutive_iterations = 10
 total_reward_vec = np.zeros(num_consecutive_iterations)
@@ -145,7 +145,6 @@ for episode in range(num_episodes):
             reward = -100
         if env.check_avoidaince():
             reward = -100
-
         if done:
             print("done!")
             reward = 500
@@ -164,7 +163,7 @@ for episode in range(num_episodes):
             pass
         env.plot_data(max_number_of_steps,t,done,episode,plot_flag,reward)
 
-        if done or t >= max_number_of_steps-1 or env.check_wall():
+        if done or t >= max_number_of_steps-1 or env.check_wall() or env.check_avoidaince():
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
             done_vec = np.hstack((done_vec[1:], done_count))
             done_count = 0
