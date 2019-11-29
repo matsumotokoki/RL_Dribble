@@ -21,8 +21,9 @@ def huberloss(y_true, y_pred):
     return K.mean(loss)
 
 class QNetwork:
-    def __init__(self,learning_rate=0.01, state_size=6,action_size=9,hidden_size=10):
+    def __init__(self,learning_rate=0.01, state_size=8,action_size=9,hidden_size=10):
         self.action_size = action_size
+        self.state_size = state_size
         self.model = Sequential()
         self.model.add(Dense(hidden_size,activation='relu',input_dim=state_size))
         self.model.add(Dense(hidden_size,activation='relu'))
@@ -31,7 +32,7 @@ class QNetwork:
         self.model.compile(loss=huberloss,optimizer=self.optimizer)
 
     def replay(self, memory, batch_size, gamma, targetQN):
-        inputs = np.zeros((batch_size, 6))
+        inputs = np.zeros((batch_size, self.state_size))
         targets = np.zeros((batch_size, self.action_size))
         mini_batch = memory.sample(batch_size)
 
@@ -104,8 +105,8 @@ actor = Actor()
 for episode in range(num_episodes):
     env.reset()
     env.step(np.random.randint(9))
-    state = env.get_state()[0:6]
-    state = np.reshape(state, [1,6])
+    state = env.get_state()[0:8]
+    state = np.reshape(state, [1,8])
     episode_reward = 0
     done_count = 0
     targetQN.model.set_weights(mainQN.model.get_weights())
@@ -119,16 +120,16 @@ for episode in range(num_episodes):
 
         action = actor.get_action(state, episode, mainQN)
         env.step((action))
-        next_state = env.get_state()[0:6]
-        ball_state = env.get_state()[6:8]
-        ball_vel   = env.get_state()[8:10]
+        next_state = env.get_state()[0:8]
+        ball_state = env.get_state()[8:10]
+        ball_vel   = env.get_state()[10:12]
         goal_distance = math.sqrt((-ball_state[0] + 90)**2 + ball_state[1]**2)
 
         goal_arr = math.degrees(math.atan2(-ball_state[1],-ball_state[0]+90)) 
         goal_oriented_arr = math.degrees(math.atan2(ball_vel[1],ball_vel[0])) if math.fabs(ball_vel[0]) > 0.1 else None
 
         ball_dist = math.sqrt((ball_state[0] - next_state[0])**2 + (ball_state[1] - next_state[1])**2)
-        next_state = np.reshape(next_state,[1,6])
+        next_state = np.reshape(next_state,[1,8])
         done = env.check_done()
 
         goal_arrvec = [-ball_state[1]/math.sqrt(ball_state[1]**2+(90-ball_state[0])**2)\
@@ -167,7 +168,7 @@ for episode in range(num_episodes):
             total_reward_vec = np.hstack((total_reward_vec[1:], episode_reward))
             done_vec = np.hstack((done_vec[1:], done_count))
             done_count = 0
-            ball_state = env.get_state()[6:8]
+            ball_state = env.get_state()[8:10]
             print('{:4d} Episode finished, {:3d} steps, reward: {:7.2f}, ave: {:7.2f}, x: {:6.2f}, y: {:6.2f}, dist: {:5.2f}'\
                     .format(episode+1,t+1,episode_reward,total_reward_vec.mean(),ball_state[0],ball_state[1],151-goal_distance),flush=True)
             with open(env.path + "/log.txt",'a') as f:

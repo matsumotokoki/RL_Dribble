@@ -35,20 +35,33 @@ class Dribble_Env(object):
         ball_x, ball_y = self.sim.data.body_xpos[2][0:2]
         ball_xv, ball_yv = self.sim.data.qvel[2:4]
         ball_pos_local = -(robot_x - ball_x), -(robot_y - ball_y)
+        object1_x, object1_y= self.sim.data.body_xpos[3][0:2]
+        object2_x, object2_y= self.sim.data.body_xpos[4][0:2]
+        object3_x, object3_y= self.sim.data.body_xpos[5][0:2]
+        object4_x, object4_y= self.sim.data.body_xpos[6][0:2]
+        closest_object_id = np.argmin([np.linalg.norm([object1_x - robot_x, object1_y - robot_y]),\
+                                      np.linalg.norm([object2_x - robot_x, object2_y - robot_y]),\
+                                      np.linalg.norm([object3_x - robot_x, object3_y - robot_y]),\
+                                      np.linalg.norm([object4_x - robot_x, object4_y - robot_y])])
+        
+        object_local_x = -(robot_x - self.sim.data.body_xpos[closest_object_id+3][0])
+        object_local_y = -(robot_y - self.sim.data.body_xpos[closest_object_id+3][1])
 
         return [robot_x, robot_y, ball_pos_local[0], ball_pos_local[1], \
-                robot_xv, robot_yv, ball_x, ball_y,ball_xv,ball_yv]
+                robot_xv, robot_yv,object_local_x,object_local_y,ball_x, ball_y,ball_xv,ball_yv]
 
     def check_done(self):
-        ball_x ,ball_y = self.get_state()[6:8]
+        ball_x ,ball_y = self.get_state()[8:10]
         if ball_x > 80 and -25 < ball_y < 25:
             return True
         else:
             return False
 
     def check_wall(self):
-        ball_x, ball_y = self.get_state()[6:8]
+        ball_x, ball_y = self.get_state()[8:10]
         if math.fabs(ball_y) > 51:
+            return True
+        elif ball_x > 81 and math.fabs(ball_y) > 25:
             return True
         else:
             return False
