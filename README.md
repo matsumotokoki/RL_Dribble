@@ -16,7 +16,13 @@
 
 ## 11/16
 + 速度制御で強化学習を回した結果  
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/sHpcYmoW7FY/0.jpg)](http://www.youtube.com/watch?v=sHpcYmoW7FY) 
-
-
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/sHpcYmoW7FY/0.jpg)](http://www.youtube.com/watch?v=sHpcYmoW7FY)  
 https://www.youtube.com/watch?v=sHpcYmoW7FY
+
+## 11/28
++ 障害物ありでの強化学習  
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/v1ZVAwwNkpw/0.jpg)](http://www.youtube.com/watch?v=v1ZVAwwNkpw)  
+https://youtu.be/v1ZVAwwNkpw
+
+## 12/2
++ 準備中
