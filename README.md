@@ -25,4 +25,6 @@ https://www.youtube.com/watch?v=sHpcYmoW7FY
 https://youtu.be/v1ZVAwwNkpw
 
 ## 12/2
-+ 準備中
++ ランダムに置いた1つの障害物をドリブルしながら回避する行動を学習  
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/3mZqQjY5px8/0.jpg)](http://www.youtube.com/watch?v=3mZqQjY5px8)  
+https://youtu.be/3mZqQjY5px8
