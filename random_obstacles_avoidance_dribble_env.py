@@ -44,14 +44,14 @@ class Dribble_Env(object):
                 ball_x, ball_y,ball_xv,ball_yv]
 
     def check_done(self):
-        ball_x ,ball_y = self.get_state()[8:10]
+        ball_x ,ball_y = self.get_state()[14:16]
         if ball_x > 80 and -25 < ball_y < 25:
             return True
         else:
             return False
 
     def check_wall(self):
-        ball_x, ball_y = self.get_state()[8:10]
+        ball_x, ball_y = self.get_state()[14:16]
         if math.fabs(ball_y) > 51:
             return True
         elif ball_x > 81 and math.fabs(ball_y) > 25:
@@ -59,7 +59,7 @@ class Dribble_Env(object):
         else:
             return False
         
-    def check_avoidaince(self,object_num=1):
+    def check_avoidaince(self,object_num=4):
         for i in range(object_num):
             if math.fabs(self.sim.data.qvel[5+i*3]) > 0.1 or math.fabs(self.sim.data.qvel[6+3*i]) > 0.1:
                 return True
