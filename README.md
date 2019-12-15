@@ -28,3 +28,7 @@ https://youtu.be/v1ZVAwwNkpw
 + ランダムに置いた1つの障害物をドリブルしながら回避する行動を学習  
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/3mZqQjY5px8/0.jpg)](http://www.youtube.com/watch?v=3mZqQjY5px8)  
 https://youtu.be/3mZqQjY5px8
+
+## 12/19
++ ランダムに置いた4つの障害物をドリビルしながら回避する行動の学習  
+[![準備中]](https://github.com/matsumotokoki/RL_Dribble)  
