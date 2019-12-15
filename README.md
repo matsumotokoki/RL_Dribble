@@ -10,8 +10,8 @@
 ### MEMO
 + DQNを回せるようになった
     + 評価関数を考える必要あり
-    + 入力は4つでいいのか検討
-+ PID制御のコードもこれから書きたい 
+    + 入力は4つでいいのか検討 →障害物の数に合わせて変更、速度成分を追加した  
++ ~~PID制御のコードもこれから書きたい~~ 
 
 
 ## 11/16
@@ -20,7 +20,7 @@
 https://www.youtube.com/watch?v=sHpcYmoW7FY
 
 ## 11/28
-+ 障害物ありでの強化学習  
++ 障害物ありでの強化学習(固定)  
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/v1ZVAwwNkpw/0.jpg)](http://www.youtube.com/watch?v=v1ZVAwwNkpw)  
 https://youtu.be/v1ZVAwwNkpw
 
@@ -30,5 +30,5 @@ https://youtu.be/v1ZVAwwNkpw
 https://youtu.be/3mZqQjY5px8
 
 ## 12/19
-+ ランダムに置いた4つの障害物をドリブルしながら回避する行動の学習  
-[![準備中]](https://github.com/matsumotokoki/RL_Dribble)  
++ ランダムに置いた4つの障害物をドリブルしながら回避する行動を学習  
+[![準備中]()](https://github.com/matsumotokoki/RL_Dribble)  
